@@ -1,2 +1,1 @@
-Repo Init
-part 2
+git submodule update --init --recursive
