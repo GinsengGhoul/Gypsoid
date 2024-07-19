@@ -93,10 +93,17 @@ find_package(Threads REQUIRED)
 # Add Threads to link libraries
 list(APPEND EXTRA_LIBS Threads::Threads)
 
+find_package(OpenGL REQUIRED)
+
 # include SDL
-add_subdirectory(SDL)
+add_subdirectory(SDL
+                 GLES2
+)
+
 include_directories(Gypsoid
-                    "${SDL3_SOURCE_DIR}/include"
+                    "SDL/include"
+                    GLES2
+                    ${OPENGL_INCLUDE_DIR}
                     )
 add_definitions(-D_REENTRANT)
 
@@ -115,7 +122,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
   message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
   add_executable(Gypsoid_Debug ${SOURCES})
   target_compile_definitions(Gypsoid_Debug PRIVATE)
-  target_link_libraries(Gypsoid_Debug SDL3::SDL3)
+  target_link_libraries(Gypsoid_Debug SDL3::SDL3 OpenGL::GL)
   # Allow access to files inside the BinaryDIR
   target_include_directories(Gypsoid_Debug PRIVATE "${PROJECT_BINARY_DIR}")
 endif()
@@ -127,7 +134,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Release)
   message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
   add_executable(Gypsoid ${SOURCES})
   target_compile_definitions(Gypsoid PRIVATE RELEASE)
-  target_link_libraries(Gypsoid SDL3::SDL3)
+  target_link_libraries(Gypsoid SDL3::SDL3 OpenGL::GL)
   # Allow access to files inside the BinaryDIR
   target_include_directories(Gypsoid PRIVATE "${PROJECT_BINARY_DIR}")
 endif()
