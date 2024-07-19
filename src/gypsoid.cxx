@@ -13,7 +13,7 @@ int main(int argc, char* args[]){
   int height = 600;
   const char* title = "wowza it's a title";
   // or the flags together
-  uint flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+  int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
