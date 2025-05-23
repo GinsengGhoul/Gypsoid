@@ -43,48 +43,33 @@ option(OPTIMIZE_FOR_X86-64-V2 "Build with -march=x86_64-v2" OFF)
 option(OPTIMIZE_FOR_X86-64-V3 "Build with -march=x86_64-v3" OFF)
 option(OPTIMIZE_FOR_X86-64-V4 "Build with -march=x86_64-v4" OFF)
 
-# append Warnings
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable")
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter -Wno-sign-compare -Wno-cast-function-type -Wno-missing-field-initializers")
-
 # Append build settings
 if(OPTIMIZE_FOR_NATIVE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
 elseif(OPTIMIZE_FOR_I486)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=i486")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=i486")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32 -march=i486")
 elseif(OPTIMIZE_FOR_I586)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=i586")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=i586")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32 -march=i586")
 elseif(OPTIMIZE_FOR_I686)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=i686")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=i686")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32 -march=i686")
 elseif(OPTIMIZE_FOR_X86_64)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64")
 elseif(OPTIMIZE_FOR_X86_64_V2)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64-v2")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64-v2")
 elseif(OPTIMIZE_FOR_X86_64_V3)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64-v3")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64-v3")
 elseif(OPTIMIZE_FOR_X86_64_V4)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64-v4")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64-v4")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64 -mtune=generic")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64 -mtune=generic")
 endif()
 
-# Check if ccache is available
-find_program(CCACHE_FOUND ccache)
+# set CFLAGS=CXXFLAGS
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 
-# If ccache is found, use it as C++ compiler
-if(CCACHE_FOUND)
-    message(STATUS "CCACHE FOUND in ${CCACHE_FOUND}, setting as launcher")
-    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_FOUND}")
-endif()
+# append Warnings
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-pointer-types")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter")
 
 # Enable threading explicitly
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -117,6 +102,7 @@ file(GLOB SOURCES "src/*.cxx")
 
 # Debug build
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
   message(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
   message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
@@ -129,7 +115,8 @@ endif()
 
 # Release build
 if(CMAKE_BUILD_TYPE STREQUAL Release)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -ftree-vectorize")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
   message(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
   message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
   add_executable(Gypsoid ${SOURCES})
