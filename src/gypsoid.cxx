@@ -11,7 +11,7 @@ int main(int argc, char* args[]){
   int windowPosY = SDL_WINDOWPOS_CENTERED_DISPLAY(0);
   int width = 800;
   int height = 600;
-  const char* title = "wowza it's a title";
+  const char* title = "Gypsoid Debug";
   // or the flags together
   int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
@@ -38,9 +38,18 @@ int main(int argc, char* args[]){
     while(isRunning){
 
       red += 0.1f;
-      if(red > 1.1f){
+      if( red > 1.1f){
         red = 0.0f;
       }
+      grn += 0.2f;
+      if( grn > 1.1f){
+        grn = 0.0f;
+      }
+      blu += 0.3f;
+      if( blu > 1.1f){
+        blu = 0.0f;
+      }
+
       glClearColor(red, blu, grn, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
